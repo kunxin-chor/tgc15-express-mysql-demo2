@@ -1,0 +1,26 @@
+{{#extends 'base'}}
+
+{{#block "content"}}
+<h1>Create New City</h1>
+<form method="POST">
+    <div>
+        <label>City Name:</label>
+        <input type="text" class="form-control" name="city"/>
+    </div>
+    <div>
+        <label>Country</label>
+        <select name="country_id" class="form-control">
+            {{#each countries}}
+            <option value="{{this.country_id}}">
+                {{this.country}}
+            </option>
+            {{/each}}
+        </select>
+    </div>
+    <input type="submit" value="Create" class="btn btn-primary mt-3"/>
+</form>
+
+
+{{/block}}
+
+{{/extends}}

@@ -100,6 +100,87 @@ async function main() {
         await connection.execute(query, [firstName, lastName, actorId])
         res.redirect('/actors');
     })
+
+    // show delete actor confirmation
+    app.get('/actor/:actor_id/delete', async function(req,res){
+        const actorId = req.params.actor_id;
+        const query = "SELECT * from actor WHERE actor_id = ?";
+        const results = await connection.execute(query, [actorId]);
+        const rows = results[0];
+        const actor = rows[0];
+
+        res.render('delete_actor',{
+            'actor': actor
+        })
+    })
+
+    app.post('/actor/:actor_id/delete', async function(req,res){
+        const actorId = req.params.actor_id;
+        const query = "DELETE FROM actor WHERE actor_id = ?"
+        await connection.execute(query, [actorId]);
+        res.redirect('/actors')
+    })
+
+    // get all cities
+    app.get('/cities', async function(req,res){
+        const results = await connection.execute(
+            `SELECT city_id, city, country 
+                FROM city JOIN country
+                    ON city.country_id = country.country_id`);
+        const rows = results[0];
+        res.render('cities',{
+            'cities': rows
+        })
+    })
+
+    // create city
+    app.get('/city/create', async function(req,res){
+        let results = await connection.execute("SELECT * from country ORDER BY country");
+        let countries = results[0];
+        res.render('create_city',{
+            'countries': countries
+        });
+    })
+
+    app.post('/city/create', async function(req,res){
+        let city = req.body.city;
+        let country_id = req.body.country_id;
+
+        let results = await connection.execute(
+            "SELECT * from country where country_id = ?", [country_id]);
+
+        if (results[0].length == 0) {
+            res.send("Country ID does not exist");
+        } else {
+            let query ="INSERT INTO city (city, country_id) VALUES (?,?)";
+            await connection.execute(query, [city, country_id]);
+            res.redirect('/cities')
+        }      
+    })
+
+    app.get('/city/:city_id/update', async function(req,res){
+        const results = await connection.execute(
+            "SELECT * FROM city where city_id = ?", [req.params.city_id]);
+
+        const countryResults = await connection.execute("SELECT * from country");
+        const countries = countryResults[0];
+
+        const city = results[0][0];
+        res.render('edit_city', {
+            'city': city,
+            'countries': countries
+        });
+    })
+
+    app.post('/city/:city_id/update', async function(req,res){
+        const query = "UPDATE city SET city=?, country_id=? WHERE city_id=?";
+        await connection.execute(query, [
+            req.body.city,
+            req.body.country_id,
+            req.params.city_id
+        ])
+        res.redirect('/cities')
+    })
 }
 main();
 

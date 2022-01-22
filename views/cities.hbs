@@ -1,0 +1,31 @@
+{{#extends "base"}}
+
+{{#block "content"}}
+<h1>All Cities</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>City Name</th>
+            <th>Country</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    {{#each cities}} 
+        <tr>
+            <td>{{this.city}}</td>
+            <td>{{this.country}}</td>
+            <td>
+                <a href="/city/{{this.city_id}}/update" class="btn btn-primary btn-sm">Edit</a>
+            </td>
+        </tr>
+    {{/each}}
+
+</table>
+
+
+{{/block}}
+
+{{/extends}}
+
