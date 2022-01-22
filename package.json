@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/kunxin-chor/tgc15-express-mysql-demo2#readme",
   "dependencies": {
-    "mysql2": "^2.3.3"
+    "express": "^4.17.2",
+    "handlebars-helpers": "^0.10.0",
+    "hbs": "^4.2.0",
+    "mysql2": "^2.3.3",
+    "wax-on": "^1.2.2"
   }
 }
