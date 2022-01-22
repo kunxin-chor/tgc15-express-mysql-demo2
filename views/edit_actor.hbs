@@ -1,0 +1,27 @@
+{{#extends 'base'}}
+
+{{#block "content"}}
+<h1>Edit Actor: {{actor.first_name}} {{actor.last_name}}</h1>
+<form method="POST">
+    <div>
+        <label>First Name:</label>
+        <input type="text" 
+               class="form-control" 
+               name="first_name"
+               value="{{actor.first_name}}"
+        />
+    </div>
+    <div>
+        <label>Last Name:</label>
+        <input type="text" 
+               class="form-control" 
+               name="last_name"
+               value="{{actor.last_name}}"
+        />
+    </div>
+    <input type="submit" class="btn btn-primary btn-sm mt-3" value="Update"/>    
+</form>
+
+{{/block}}
+
+{{/extends}}
