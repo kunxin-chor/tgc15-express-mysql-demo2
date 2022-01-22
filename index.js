@@ -181,6 +181,109 @@ async function main() {
         ])
         res.redirect('/cities')
     })
+
+    // show all films
+    app.get('/films', async function(req,res){
+        const query = "SELECT film_id, title, description, release_year from film";
+        let results = await connection.execute(query);
+        let films = results[0];
+        res.render('films',{
+            'films': films
+        })
+    })
+
+    app.get('/film/create', async function(req,res){
+        let languageResults = await connection.execute("SELECT * from language");
+        let languages = languageResults[0];
+
+        let actorResults = await connection.execute("SELECT * from actor");
+        let actors = actorResults[0];
+
+        res.render('create_film', {
+            'languages': languages,
+            'actors': actors
+        })
+    })
+
+    // create new film
+    app.post('/film/create', async function(req,res){
+
+        // extract all out the selected actors
+        let actors = req.body.actors;
+        if (!actors) {
+            actors = [];
+        }
+        if (!Array.isArray(actors)) {
+            actors [ req.body.actors ]
+        }
+
+        const results = await connection.execute(`INSERT INTO film (title, description, release_year, language_id)
+                                         VALUES (?, ?, ?, ?)`, [
+                                             req.body.title,
+                                             req.body.description,
+                                             req.body.release_year,
+                                             req.body.language_id   
+                                         ])
+        const newFilmId = results[0].insertId; // results.insertId will contain the id of the new film
+        for (let a of actors) {
+            let query = "INSERT INTO film_actor (actor_id, film_id) VALUES (?,?)";
+            await connection.execute(query, [a, newFilmId]);
+        }
+
+        res.redirect('/films')                    
+    })
+
+    app.get('/film/:film_id/update', async function(req,res){
+
+        let [films] = await connection.execute("SELECT * FROM film WHERE film_id = ?", [req.params.film_id]);
+        let film = films[0];
+
+        let [languages] = await connection.execute("SELECT * FROM language");
+  
+
+        let [currentActors] = await connection.execute("SELECT * from film_actor WHERE film_id=?", [req.params.film_id]);
+
+        // extract all the actor ids and place it into an array
+        let currentActorIds = currentActors.map(function(a){
+            return a.actor_id;
+        })
+       
+        let [allActors] = await connection.execute("SELECT * FROM actor");
+
+        res.render('edit_film',{
+            'film': film,
+            'languages': languages,
+            'currentActorIds': currentActorIds,
+            'allActors': allActors
+        })
+    })
+
+    app.post('/film/:film_id/update', async function(req,res){
+        // update the film itself
+        const query  = "UPDATE film SET title=?, description=?, release_year=?, language_id=? WHERE film_id=?";
+        await connection.execute(query, [
+            req.body.title,
+            req.body.description,
+            req.body.release_year,
+            req.body.language_id,
+            req.params.film_id
+        ]);
+
+        // update the many to many relationships
+
+        // 1. delete all the actors that are working on the film
+        await connection.execute("DELETE FROM film_actor WHERE film_actor.film_id = ?", [req.params.film_id]);
+
+        // 2. re-add all the actors that are in the form
+        for (let a of req.body.actors) {
+            let query = "INSERT INTO film_actor (actor_id, film_id) VALUES (?,?)";
+            await connection.execute(query, [a, req.params.film_id]);
+        }
+
+        res.redirect('/films')
+    });
+
+
 }
 main();
 

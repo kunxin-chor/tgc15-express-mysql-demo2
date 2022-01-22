@@ -1,0 +1,57 @@
+{{#extends 'base'}}
+
+{{#block "content"}}
+<h1>Create New Film</h1>
+<form method="POST">
+    <div>
+        <label>Film Name:</label>
+        <input type="text" name="title" class="form-control"/>
+    </div>
+    <div>
+        <label>Description</label>
+        <textarea name="description" class="form-control"></textarea>
+    </div>
+    <div>
+        <label>Release Year</label>
+        <input type="text" name="release_year" class="form-control">
+    </div>
+    <div>
+        <label>Language</label>
+        <select name="language_id" class="form-control">
+            {{#each languages}}
+            <option value="{{this.language_id}}">
+                {{this.name}}
+            </option>
+            {{/each}}
+        </select>
+    </div>
+    <div>
+        <label>Actors:</label>
+        <select name="actors" id="actors" class="form-control" multiple>
+            {{#each actors}}
+            <option value="{{this.actor_id}}">
+                {{this.first_name}} {{this.last_name}}
+            </option>
+            {{/each}}
+        </select>
+    </div>
+    <input type="submit" value="Create" class="btn btn-primary mt-1"/>
+
+</form>
+
+{{/block}}
+
+{{#block 'styles'}}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{{/block}}
+
+{{#block 'js'}}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(function(){
+        $("#actors").select2();
+    })
+</script>
+{{/block}}
+
+{{/extends}}

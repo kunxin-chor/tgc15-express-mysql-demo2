@@ -1,0 +1,29 @@
+{{#extends 'base'}}
+
+{{#block "content"}}
+<h1>Films <a href="/film/create" class="btn btn-primary btn-sm">+</a></h1>
+
+<div class="row">
+    {{#each films}}
+    <div class="col">
+        <div class="card p-3 m-1" style="width:100%">
+            <div class="card-body">
+                <h1 class='card-title'>
+                    {{this.title}} <a href="/film/{{this.film_id}}/update" class="btn btn-primary btn-sm">Edit</a>
+                </h1>
+                <div>
+                    {{this.description}}
+                </div>
+                <p>
+                    <strong>Year of release:{{this.release_year}}</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</div>
+
+
+{{/block}}
+
+{{/extends}}

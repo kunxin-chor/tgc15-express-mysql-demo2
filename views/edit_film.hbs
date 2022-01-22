@@ -1,0 +1,65 @@
+{{#extends 'base'}}
+
+{{#block "content"}}
+<h1>Edit Film: {{film.title}}</h1>
+<form method="POST">
+    <div>
+        <label>Film Name:</label>
+        <input type="text" name="title" class="form-control" value="{{film.title}}"/>
+    </div>
+    <div>
+        <label>Description</label>
+        <textarea name="description" class="form-control">{{film.description}}</textarea>
+    </div>
+    <div>
+        <label>Release Year</label>
+        <input type="text" name="release_year" class="form-control" value="{{film.release_year}}">
+    </div>
+    <div>
+        <label>Language</label>
+        <select name="language_id" class="form-control">
+            {{#each languages}}
+            <option value="{{this.language_id}}"
+                {{#eq  this.language_id ../film.language_id}}
+                selected
+                {{/eq}}
+            >
+                {{this.name}}
+            </option>
+            {{/each}}
+        </select>
+    </div>
+    <div>
+        <label>Actors:</label>
+        <select name="actors" id="actors" class="form-control" multiple>
+            {{#each allActors}}
+            <option value="{{this.actor_id}}"
+                {{#inArray ../currentActorIds this.actor_id}}
+                selected
+                {{/inArray}}            
+            >
+                {{this.first_name}} {{this.last_name}}
+            </option>
+            {{/each}}
+        </select>
+    </div>
+    <input type="submit" value="Update" class="btn btn-primary mt-1"/>
+
+</form>
+
+{{/block}}
+
+{{#block 'styles'}}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{{/block}}
+
+{{#block 'js'}}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(function(){
+        $("#actors").select2();
+    })
+</script>
+{{/block}}
+
+{{/extends}}
