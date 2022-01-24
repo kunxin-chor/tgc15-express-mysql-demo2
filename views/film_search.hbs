@@ -1,0 +1,36 @@
+{{#extends 'base'}}
+
+{{#block "content"}}
+<h1>Search</h1>
+<form method="GET">
+    <div>
+        <label>Title:</label>
+        <input type="text" class="form-control" name="title" value="{{query.title}}"/>
+    </div>
+    <div>
+        <label>Max Rental Duration</label>
+        <input type="text" class="form-control" name="max_rental_duration" value="{{query.max_rental_duration}}"/>
+    </div>
+    <input type="submit" value="Search" class="btn btn-primary btn-sm"/>
+</form>
+
+<table class="table">
+    <thead>
+        <th>Title</th>
+        <th>Rental Duration</th>
+    </thead>
+    <tbody>
+        {{#each films}}
+        <tr>
+            <td>{{this.title}}</td>
+            <td>{{this.rental_duration}}</td>
+            
+        </tr>
+        {{/each}}
+    </tbody>
+
+</table>
+{{/block}}
+
+
+{{/extends}}
