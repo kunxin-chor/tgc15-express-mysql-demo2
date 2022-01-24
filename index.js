@@ -192,6 +192,29 @@ async function main() {
         })
     })
 
+    app.get('/film/:film_id', async function(req,res){
+        const query = `SELECT * FROM film 
+                            JOIN language
+                            ON film.language_id = language.language_id
+                            WHERE film_id = ?`;
+
+        const [films] = await connection.execute(query, [req.params.film_id]);
+        const film = films[0];
+
+        const actorQuery = `SELECT * from film_actor  JOIN actor 
+                            ON film_actor.actor_id = actor.actor_id
+                            WHERE film_id = ?;`
+        const [actors] = await connection.execute(actorQuery, [req.params.film_id]);
+
+        res.render('movie_details',{
+            'film': film,
+            'actors': actors
+        })
+
+
+
+    })
+
     app.get('/film/create', async function(req,res){
         let languageResults = await connection.execute("SELECT * from language");
         let languages = languageResults[0];

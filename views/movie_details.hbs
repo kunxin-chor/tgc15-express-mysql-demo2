@@ -1,0 +1,25 @@
+{{#extends 'base'}}
+
+{{#block "content"}}
+<h1>{{film.title}}</h1>
+<div>
+    {{film.description}}
+</div>
+<ul>
+    <li>Release Year: {{film.release_year}}</li>
+    <li>Language: {{film.name}}</li>
+    <li>Rental Duration: {{film.rental_duration}}</li>
+    <li>Length:{{film.length}}</li>
+    <li>Replacement Cost:{{film.replacement_cost}}</li>
+</ul>
+<h2>Cast</h2>
+<ul>
+{{#each actors}} 
+    <li>{{this.first_name}} {{this.last_name}}</li>
+{{/each}}
+</ul>
+
+
+{{/block}}
+
+{{/extends}}
